@@ -47,7 +47,7 @@ for (hei = 0; hei < 9; hei++) {
 			  groups: ['block']
 			});
 		     $('canvas').animateLayerGroup('block',{
-				  fillStyle: 'rgb(220, 220, 220)'
+				  fillStyle: 'rgb(10, 10, 10)'
 				},100 + (total*10));
 		}else{
 			$('canvas').drawRect({
@@ -82,4 +82,4 @@ setInterval(function() {
 			shift=true;
 	}
 
-}, 1000);
+}, 500);
