@@ -38,16 +38,14 @@ for (hei = 0; hei < 9; hei++) {
     {
 	
     	if(logoTrix[total]===1){
-		setTimeout(function(wid, hei){
 		    $('canvas').drawRect({
-			  fillStyle: 'rgb(225, 225, 225)',
+			  fillStyle: 'rgb(0, 0, 0)',
 			  x: 20*wid+10, y: 20*hei+10,
 			  width: 20,
 			  height: 20,
 			  layer: true,
 			  groups: ['block']
 			});
-			}, 1000);
 		}else{
 			$('canvas').drawRect({
 			  fillStyle: '#000',
@@ -71,12 +69,12 @@ setInterval(function() {
 	if (shift){
 		$('canvas').animateLayerGroup('block',{
 		  fillStyle: 'rgb(50, 51, 150)'
-		},600);
+		},400);
 		shift= false;
 	}else{
 			$('canvas').animateLayerGroup('block',{
 			  fillStyle: 'rgb(150, 51, 50)'
-			},600);
+			},400);
 
 			shift=true;
 	}
