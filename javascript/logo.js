@@ -46,6 +46,9 @@ for (hei = 0; hei < 9; hei++) {
 			  layer: true,
 			  groups: ['block']
 			});
+		     $('canvas').animateLayerGroup('block',{
+				  fillStyle: 'rgb(220, 220, 220)'
+				},100 + (total*10));
 		}else{
 			$('canvas').drawRect({
 			  fillStyle: '#000',
