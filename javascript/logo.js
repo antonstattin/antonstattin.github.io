@@ -70,14 +70,17 @@ var shift = false;
 setInterval(function() {
 
 	if (shift){
+		
+		var timeOffset =  Math.floor((Math.random() * 200) + 1);
 		$('canvas').animateLayerGroup('block',{
 		  fillStyle: 'rgb(173, 62, 62)'
-		},800);
+		},(800+timeOffset));
 		shift= false;
 	}else{
+			var timeOffset =  Math.floor((Math.random() * 200) + 1);
 			$('canvas').animateLayerGroup('block',{
 			  fillStyle: 'rgb(255, 97, 0)'
-			},800);
+			},(800+timeOffset));
 
 			shift=true;
 	}
