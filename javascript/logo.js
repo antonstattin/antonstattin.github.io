@@ -76,7 +76,7 @@ setInterval(function() {
 		shift= false;
 	}else{
 			$('canvas').animateLayerGroup('block',{
-			  fillStyle: 'rgb(150, 51, 50)'
+			  fillStyle: 'rgb(255, 97, 0)'
 			},800);
 
 			shift=true;
