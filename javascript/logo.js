@@ -62,21 +62,21 @@ for (hei = 0; hei < 9; hei++) {
 }
 
 
-// shift colors every 6sec, very artistic, artistic indeed 
+// shift colors every 1sec, very artistic, artistic indeed 
 var shift = false;
 setInterval(function() {
 
 	if (shift){
 		$('canvas').animateLayerGroup('block',{
 		  fillStyle: 'rgb(50, 51, 150)'
-		},400);
+		},800);
 		shift= false;
 	}else{
 			$('canvas').animateLayerGroup('block',{
 			  fillStyle: 'rgb(150, 51, 50)'
-			},400);
+			},800);
 
 			shift=true;
 	}
 
-}, 6000);
+}, 1000);
