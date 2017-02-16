@@ -48,7 +48,7 @@ for (hei = 0; hei < 9; hei++) {
 			});
 		     $('canvas').animateLayerGroup('block',{
 				  fillStyle: 'rgb(10, 10, 10)'
-				},100 + (total*10));
+				},50 + (total*2));
 		}else{
 			$('canvas').drawRect({
 			  fillStyle: '#000',
