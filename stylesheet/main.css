@@ -3,5 +3,18 @@ canvas{
 }
 
 body{
-	background: red;
+	background: black;
+	color: rgb(200,200,200);
+	font-family: 'Pangolin', cursive;
+}
+
+.logo{
+	margin-top: 0em;
+	font-family: 'Indie Flower', cursive;
+	color: rgb(200,200,200);
+}
+.logo-sub{
+	margin-top: 0em;
+	color: rgb(200,200,200);
+	line-height: 0%;
 }
