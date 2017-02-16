@@ -38,7 +38,7 @@ for (hei = 0; hei < 9; hei++) {
     {
 	
     	if(logoTrix[total]===1){
-		//setTimeout(function(){
+		setTimeout(function(wid, hei){
 		    $('canvas').drawRect({
 			  fillStyle: 'rgb(225, 225, 225)',
 			  x: 20*wid+10, y: 20*hei+10,
@@ -47,7 +47,7 @@ for (hei = 0; hei < 9; hei++) {
 			  layer: true,
 			  groups: ['block']
 			});
-			//}, 1000);
+			}, 1000);
 		}else{
 			$('canvas').drawRect({
 			  fillStyle: '#000',
