@@ -476,6 +476,8 @@ function startGame(){
 
 	spawnPoint();
 
+	player.velocityY = 0;
+
 }
 
 
@@ -491,6 +493,7 @@ var main = function () {
 	}
 
 	if(gamestate){
+
 		var now = Date.now();
 		var delta = now - then;
 
