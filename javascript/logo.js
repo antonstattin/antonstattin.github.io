@@ -53,7 +53,7 @@ for (hei = 0; hei < 9; hei++) {
 }
 
 
-var wtext = "Hi, press 'Enter' to start. ";
+var wtext = "<strong>Hi, Bitskull makes Indie Games. Awesome stuff on the way, stay tuned.. </strong><br><i>(if you feel bored from waiting.. hit <span style='color:#d89c3a'>Enter</span> on your keyboard)</i>";
 
 function writeText(text, i){
 
