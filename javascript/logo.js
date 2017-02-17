@@ -52,6 +52,40 @@ for (hei = 0; hei < 9; hei++) {
 
 }
 
+
+var wtext = "Hi, press 'Enter' to start. ";
+
+function writeText(text, i){
+
+	if(text.length>i){
+		$('#welcometext').html(text.substring(0, i));
+		setTimeout(function(){
+			writeText(text, i+1);
+		},100);
+	}
+
+
+}
+
+writeText(wtext, 0);
+
+
+
+function cursorAnim(){
+	$('#cursor').animate({
+		opacity:1
+	}, 500, 'swing').animate(
+	{
+		opacity:0
+	}, 500, 'swing');
+
+}
+setInterval('cursorAnim()', 1000);
+
+
+// game functionalities
+
+
 var w = window;
 requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
 
