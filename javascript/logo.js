@@ -103,8 +103,8 @@ function spawnPoint(){
 	while(exit){
 
 
-		valueX = Math.floor((Math.random() * 108) + 1);
-		valueY = Math.floor((Math.random() * 108) + 1);
+		valueX = Math.floor((Math.random() * 228) + 1);
+		valueY = Math.floor((Math.random() * 128) + 1);
 
 		var roundX = roundUp(valueX/20);
 		var roundY = roundUp(valueY/20);
