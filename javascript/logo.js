@@ -476,7 +476,6 @@ function startGame(){
 
 	spawnPoint();
 
-	var then = Date.now();
 
 }
 
@@ -490,6 +489,8 @@ var main = function () {
 		
 		gamestate=true
 		startGame();
+
+		then = Date.now();
 	}
 
 	if(gamestate){
@@ -509,6 +510,6 @@ var main = function () {
 };
 
 var gamestate = false;
-var then = Date.now();
+var then = 0;
 
 main();
