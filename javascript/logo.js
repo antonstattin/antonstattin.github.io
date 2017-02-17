@@ -40,6 +40,11 @@ for (hei = 0; hei < 9; hei++) {
 			  groups: ['block']
 			});
 
+		    $('canvas').animateLayerGroup('block',{
+		  		fillStyle: 'rgb(75, 93, 124)'
+			},600+(total*5));
+			shift= false;
+
 		}
 			   
 	  total++;
@@ -47,6 +52,7 @@ for (hei = 0; hei < 9; hei++) {
       }
 
 }
+
 
 $('canvas').drawRect({
 		  fillStyle: 'rgb(50, 200, 20)',
