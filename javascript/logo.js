@@ -476,7 +476,7 @@ function startGame(){
 
 	spawnPoint();
 
-	player.velocityY = 0;
+	var then = Date.now();
 
 }
 
