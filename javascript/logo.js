@@ -212,6 +212,10 @@ function win(){
 
 	}
 
+	writeText("100 points! You must be really bored! If you hit 1000 points then I'll show you a secret!", 0);
+
+
+
 }
 
 
@@ -275,6 +279,26 @@ function checkPickPoint(){
 		if(player.points == 100){
 			win();
 		}
+
+		if(player.points == 200){
+			writeText("200 points! woohoo, 800 to go!",0);
+		}
+
+		if(player.points == 500){
+			writeText("half way there..",0);
+		}
+		if(player.points == 900){
+			writeText("the last 100! coman!",0);
+		}
+
+		if(player.points == 980){
+			writeText("so close..",0);
+		}
+		if(player.points == 1000){
+			writeText("the secret: coming soon.. (lol, not yet implemented)",0);
+		}
+
+
 
 		gameObject.score = true;
 		spawnPoint();
