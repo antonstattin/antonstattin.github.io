@@ -373,7 +373,7 @@ function renderScore(){
 
 	$('canvas').animateLayer('score', 
 		{fontSize:12}, 
-		10000, 
+		1000, 
 		function(){
 			gameObject.score= false;
 			$('canvas').removeLayer('score').drawLayers();
