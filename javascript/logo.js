@@ -29,6 +29,7 @@ for (hei = 0; hei < 9; hei++) {
     
     for (wid=0;  wid<11; wid++)
     {
+	
     	if(logoTrix[total]===1){
 		    $('canvas').drawRect({
 			  fillStyle: 'rgb(0, 0, 0)',
@@ -39,17 +40,13 @@ for (hei = 0; hei < 9; hei++) {
 			  groups: ['block']
 			});
 
-		    $('canvas').animateLayerGroup('block',{
-		  		fillStyle: 'rgb(75, 93, 124)'
-			},600+(total*5));
-			shift= false;
-
 		}
-		total++;
-	}
+			   
+	  total++;
+
+      }
 
 }
-
 
 $('canvas').drawRect({
 		  fillStyle: 'rgb(50, 200, 20)',
@@ -196,6 +193,7 @@ var update = function(modifier){
 		if(player.grounded){
 
 			//wantY -= player.speed * modifier + 10*modifier;
+
 
 			player.velocityY -=player.speed * modifier + 2;
 
