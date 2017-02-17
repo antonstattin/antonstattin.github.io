@@ -136,7 +136,7 @@ var player = {
 	grounded: false,
 	mass: 0.43,
     slide: 0.1,
-    points: 89
+    points: 0
 };
 
 var point = {
@@ -299,7 +299,7 @@ function checkPickPoint(){
 		if(player.points == 100){
 			win();
 		}
-		
+
 		gameObject.score = true;
 		spawnPoint();
 
