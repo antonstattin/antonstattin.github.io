@@ -32,7 +32,7 @@ for (hei = 0; hei < 9; hei++) {
 	
     	if(logoTrix[total]===1){
 		    $('canvas').drawRect({
-			  fillStyle: 'rgb('+(165-(hei*10))+', '+ (183-(hei*10))+', '+(214-(hei*10))+')',
+			  fillStyle: 'rgb('+(154+(hei*10))+', '+ (56+(hei*10))+', '+(0+(hei*10))+')',
 			  x: 20*wid+10, y: 20*hei+10,
 			  width: 20,
 			  height: 20,
@@ -51,64 +51,6 @@ for (hei = 0; hei < 9; hei++) {
       }
 
 }
-
-
-$('canvas').drawRect({
-		  fillStyle: 'rgb(50, 200, 20)',
-		  x: 191, y:119,
-		  width: 20,
-		  height: 3,
-		  layer: true,
-		  groups: ['foreground']
-		});
-
-$('canvas').drawRect({
-		  fillStyle: 'rgb(50, 200, 20)',
-		  x: 31, y:119,
-		  width: 20,
-		  height: 3,
-		  layer: true,
-		  groups: ['foreground']
-		});
-
-$('canvas').drawRect({
-		  fillStyle: 'rgb(50, 200, 20)',
-		  x: 51, y:139,
-		  width: 20,
-		  height: 3,
-		  layer: true,
-		  groups: ['foreground']
-		});
-
-$('canvas').drawRect({
-		  fillStyle: 'rgb(50, 200, 20)',
-		  x: 171, y:139,
-		  width: 20,
-		  height: 3,
-		  layer: true,
-		  groups: ['foreground']
-		});
-
-$('canvas').drawRect({
-		  fillStyle: 'rgb(50, 200, 20)',
-		  x: 130, y:139,
-		  width: 20,
-		  height: 3,
-		  layer: true,
-		  groups: ['foreground']
-		});
-
-$('canvas').drawRect({
-		  fillStyle: 'rgb(50, 200, 20)',
-		  x: 90, y:139,
-		  width: 20,
-		  height: 3,
-		  layer: true,
-		  groups: ['foreground']
-		});
-
-
-
 
 var w = window;
 requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
@@ -446,23 +388,124 @@ var render = function(){
 
 }
 
+function startGame(){
+
+	// loop and paint logo
+	total = 0
+	for (hei = 0; hei < 9; hei++) {
+	    
+	    for (wid=0;  wid<11; wid++)
+	    {
+		
+	    	if(logoTrix[total]===1){
+			    $('canvas').drawRect({
+				  fillStyle: 'rgb('+(165-(hei*10))+', '+ (183-(hei*10))+', '+(214-(hei*10))+')',
+				  x: 20*wid+10, y: 20*hei+10,
+				  width: 20,
+				  height: 20,
+				  layer: true,
+				  groups: ['block']
+				});
+
+			    //$('canvas').animateLayerGroup('block',{
+			  	//	fillStyle: 'rgb('+(165-(hei*10))+', '+ (183-(hei*10))+', '+(214-(hei*10))+')'
+				//},600+(total*5));
+
+			}
+				   
+		  total++;
+
+	      }
+
+	}
+
+
+	$('canvas').drawRect({
+			  fillStyle: 'rgb(50, 200, 20)',
+			  x: 191, y:119,
+			  width: 20,
+			  height: 3,
+			  layer: true,
+			  groups: ['foreground']
+			});
+
+	$('canvas').drawRect({
+			  fillStyle: 'rgb(50, 200, 20)',
+			  x: 31, y:119,
+			  width: 20,
+			  height: 3,
+			  layer: true,
+			  groups: ['foreground']
+			});
+
+	$('canvas').drawRect({
+			  fillStyle: 'rgb(50, 200, 20)',
+			  x: 51, y:139,
+			  width: 20,
+			  height: 3,
+			  layer: true,
+			  groups: ['foreground']
+			});
+
+	$('canvas').drawRect({
+			  fillStyle: 'rgb(50, 200, 20)',
+			  x: 171, y:139,
+			  width: 20,
+			  height: 3,
+			  layer: true,
+			  groups: ['foreground']
+			});
+
+	$('canvas').drawRect({
+			  fillStyle: 'rgb(50, 200, 20)',
+			  x: 130, y:139,
+			  width: 20,
+			  height: 3,
+			  layer: true,
+			  groups: ['foreground']
+			});
+
+	$('canvas').drawRect({
+			  fillStyle: 'rgb(50, 200, 20)',
+			  x: 90, y:139,
+			  width: 20,
+			  height: 3,
+			  layer: true,
+			  groups: ['foreground']
+			});
+
+	spawnPoint();
+
+}
+
 
 // loop
 
 // The main game loop
 var main = function () {
-	var now = Date.now();
-	var delta = now - then;
 
-	update(delta / 1000);
-	render();
+	if ((13 in keysDown)&&!gamestate){
+		
+		gamestate=true
+		startGame();
+	}
 
-	then = now;
+	if(gamestate){
+		var now = Date.now();
+		var delta = now - then;
+
+		update(delta / 1000);
+		render();
+
+		then = now;
+
+	}
 
 	// Request to do this again ASAP
 	requestAnimationFrame(main);
 };
 
+var gamestate = false;
 var then = Date.now();
-spawnPoint()
+
 main();
