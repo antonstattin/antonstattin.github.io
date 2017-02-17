@@ -41,7 +41,7 @@ for (hei = 0; hei < 9; hei++) {
 			});
 
 		    $('canvas').animateLayerGroup('block',{
-		  		fillStyle: 'rgb(75, 93, 124)'
+		  		fillStyle: 'rgb('+(165-(hei*10))+', '+ (183-(hei*10))+', '+(214-(hei*10))+')'
 			},600+(total*5));
 			shift= false;
 
@@ -129,21 +129,85 @@ addEventListener("keyup", function (e) {
 // Game objects
 var player = {
 	speed: 60, // movement in pixels per second
-	x: 140,
-	y: 120,
+	x: 125,
+	y: 30,
 	size: 10,
 	velocityY: 0,
 	velocityX: 0,
 	grounded: false,
 	mass: 0.43,
-    slide: 0.1 
+    slide: 0.1,
+    points: 0
 };
+
+var point = {
+	x: 0,
+	y: 0,
+	size: 6
+}
 
 var gameObject = {
 
 	gravity: 9.8,
-	friction: 4
+	friction: 4,
+	score: false
 };
+
+
+
+
+function spawnPoint(){
+
+	var exit = true;
+	while(exit){
+
+
+		valueX = Math.floor((Math.random() * 108) + 1);
+		valueY = Math.floor((Math.random() * 108) + 1);
+
+		var roundX = roundUp(valueX/20);
+		var roundY = roundUp(valueY/20);
+
+		var check = logoTrix[((roundY-1)*11)+roundX-1];
+
+		if(check){
+
+
+			point.x = valueX;
+			point.y = valueY;
+
+			exit = false;
+
+		}
+
+	};
+
+
+	$('canvas').removeLayer('point').drawLayers();
+	$('canvas').removeLayer('spec').drawLayers();
+
+	$('canvas').drawRect({
+			  fillStyle: 'rgb(255, 219, 110)',
+			  x: point.x, y: point.y,
+			  width: point.size,
+			  height: point.size,
+			  layer: true,
+			  name: 'point'
+			});
+
+	$('canvas').drawRect({
+			  fillStyle: 'rgb(255, 255, 255)',
+			  x: point.x+1, y: point.y-1,
+			  width: 2,
+			  height: 2,
+			  layer: true,
+			  name: 'spec'
+			});
+
+
+
+}
+
 
 
 // we need to check each corner if it's colliding..
@@ -183,6 +247,27 @@ function checkCollision(wantX, wantY){
 	else{
 		player.velocityY = 0;
 		player.grounded = true;
+
+
+	}
+
+
+
+}
+
+function checkPickPoint(){
+
+	hit = false;
+
+	if( (player.x<(point.x+5)) && (player.x>(point.x-5)) && (player.y<(point.y+5)) && (player.y>(point.y-5))){
+		hit=true;
+	}
+
+	if(hit){
+
+		
+		gameObject.score = true;
+		spawnPoint();
 	}
 }
 
@@ -239,6 +324,12 @@ var update = function(modifier){
 	// collision 2
 	checkCollision(wantX, wantY);
 
+
+	// check if player is at point
+
+	checkPickPoint();
+	
+
 }
 
 //round up
@@ -250,6 +341,7 @@ function roundUp(num) {
 
 function renderPlayer(){
 	$('canvas').removeLayer('player').drawLayers();
+	$('canvas').removeLayer('text').drawLayers();
 
 	$('canvas').drawRect({
 			  fillStyle: 'rgb(220, 40, 40)',
@@ -260,9 +352,35 @@ function renderPlayer(){
 			  name: 'player'
 			});
 
+	
 }
 
 
+function renderScore(){
+
+	$('canvas').drawText({
+		  fillStyle: 'rgb(255,200,36)',
+		  strokeWidth: 2,
+		  x: 120, y: 10,
+		  fontSize: 0,
+		  fontFamily: 'Verdana, sans-serif',
+		  layer: true,
+		  name:'score',
+		  text: 'Score!'
+		});
+
+	
+
+	$('canvas').animateLayer('score', 
+		{fontSize:12}, 
+		10000, 
+		function(){
+			gameObject.score= false;
+			$('canvas').removeLayer('score').drawLayers();
+		});
+
+
+}
 
 
 
@@ -271,6 +389,12 @@ function renderPlayer(){
 var render = function(){
 
 	renderPlayer();
+
+	if(gameObject.score){
+		renderScore();	
+	}
+
+
 
 	
 
@@ -294,4 +418,5 @@ var main = function () {
 };
 
 var then = Date.now();
+spawnPoint()
 main();
