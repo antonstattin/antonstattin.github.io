@@ -18,3 +18,11 @@ body{
 	color: rgb(200,200,200);
 	line-height: 0%;
 }
+
+#gameheader{
+	font-family: 'Press Start 2P', cursive;
+	
+	text-shadow: 3px 5px rgba(2,50,50,0.5);
+	font-size: 35px;
+	color: white;
+}
