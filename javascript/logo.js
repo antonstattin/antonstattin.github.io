@@ -276,7 +276,7 @@ function checkPickPoint(){
 
 		player.points++;
 
-		if(player.points == 100){
+		if(player.points == 20){
 			win();
 		}
 
