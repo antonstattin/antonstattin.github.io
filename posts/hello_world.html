@@ -1,34 +1,251 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/themes/prism.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/prism.min.js"></script>
 
-<h3><i class="fas fa-code"></i> HELLO WORLD!</h3>
-This is my first post. I started building a blog with Django but I felt it was a bit to much,
-right now I don't feel like paying for servers etc. <br>
+<h3>Hello!</h3>
+This is my first post. I started building a blog with Django but I felt it was a bit to much and I don't feel like paying for servers etc. <br>
 So a I figure why not make a static site, put it up on github and make a quick html-generator with python that I can run from the terminal. <br>
 I guess there is a lot of static-site generators out there, but I just wanted something quick and simple.<br><br>
 
-I'll get back to web dev in the future. but for now, this will be just ok!
+I'll get back to web dev in the future. but for now, this will be ok!
 <i class="far fa-calendar-check"></i><br>
+<br><br>
+<h3>Going From Hardware to Software</h3><br>
+I'm taking some courses in C and HDL etc. (<a href='https://www.nand2tetris.org/'>Nand2Tetris</a> & <a href='https://www.coursera.org/specializations/c-programming'>C-programming</a>)
+I usually only code in Python and some C# which is very high level.<br>
+This will hopefully help me understand whats going on under the hood!
+<br><br>
+A computer is built up by a huuge amount of transistors / logic gates. the most common are the Nand, And, Or and Not gates.<br>
+It's really insane that these basic components when combined can built something so advanced and powerful.<br><br>
+<img src="https://qph.fs.quoracdn.net/main-qimg-3365ebf23427d9d0a5217c5bc4d7ade3-c" alt=""><br><br>
+Here are some gates that we built in the course with the help of boolean algebra and truth tables:<br>
+And, And16, DMux, DMux4Way, DMux8Way, Mux, Mux4Way16, Mux8Way16,Mux16, Not, Xor..
+
 <br>
-<h3>Going From Hardware to Software</h3>
+<pre><code class="language-js">// Commutative Laws
+  (x AND y)=(y AND x)
+  (x OR y)=(y Or x)
 
-I just started two new interesting courses on <a herf='https://www.coursera.org/'>Coursera</a><br>
-one called 'nand2tetris' and another introduction course to C-language.<br>
+  //Associative Laws
+  (x AND (y AND z))=((x AND y) AND z)
+  (x OR (y OR z))=((x OR y) OR z)
+
+  //Distributive Laws
+  (x AND (y OR z)) =(x AND y) OR (x AND z)
+  (x OR (y OR z))=(x OR y) AND (x OR z)
+
+  //De Morgan Laws
+  NOT(x AND y)=NOT(x) OR NOT(y)
+  NOT(x OR y)=NOT(x) AND NOT(y)
+</code></pre>
+<br>Example of an Multiplexer to a Demultiplexer<br>
+This can be used to pack multiple streams of 1 and 0s into one stream and then pack it up again into multiple streams.<br>
+<img src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Telephony_multiplexer_system.gif" alt="">
+
+<br><br><br>Here is a DMux in HDL (Hardware Dynamic Language) and its truth table.
+<pre><code class="language-js">CHIP DMux {
+      IN in, sel;
+      OUT a, b;
+
+      PARTS:
+      Not(in=sel, out=nots);
+      And(a=in, b=nots, out=a);
+      And(a=in, b=sel, out=b);
+  }
+
+//|  in   |  sel  |   a   |   b   |
+//|   0   |   0   |   0   |   0   |
+//|   0   |   1   |   0   |   0   |
+//|   1   |   0   |   1   |   0   |
+//|   1   |   1   |   0   |   1   |
+
+</code></pre><br><br>
+<h4><i class="fas fa-calculator"></i> Counting with binary</h4>
+<br>
+When counting in binary we count with the base of 2 instead of 10. <br>
+Converting isn't that hard, say the number 87, which is 64+16+4+2+1.
+We can just find the highest number that goes into 87 in this case it's 64 and
+then work our way down until we get the sum 87.
+<pre><code class="language-js">
+//87 is 64+16+4+2+1
+1 | 2 | 4 | 8 | 16 | 32 | 64 | 128
+^ | ^ | ^ | x | ^  | x  | ^  | x
+//Now we really just have to count and add 1 and 0
+
+1010111 binary = 87 decimal
+
+//1(64)+ 0(0) + 1(16) + 0(0) + 1(4) + 1(2) + 1(1)... 64+16+4+2+1=87
+
+</code></pre><br><br>
+
+Adding with Binary is also quite simple.
+<br>
+<pre><code class="language-js">
+//21 + 21 = 42
+// we just move the carrying bit
+        1   1   1
+    0 0 0 1 0 1 0 1
+  +
+    0 0 0 1 0 1 0 1
+    _______________
+    0 0 1 0 1 0 1 0
 
 
-<pre><code class="language-js">x = 10
-for i in range(x):
-  print(10)
+
+//Example of overflow (8 bit)
+
+        1 1 1
+    0 0 0 1 0 1 0 1
+  +
+    0 1 0 1 1 1 0 0
+    _______________
+(1) 0 1 1 1 0 0 0 1
+
+/*
+*here we have a carry that needs to go to the left of the words size.
+*So from a mathematical point of view, what it means is that the addition that we're actually doing in our
+*hardware is not real integer addition, because we cannot go beyond the numbers that fit inside the word size.
+*Instead, what we have is really an addition module 2 to the width of the word size if you look at it mathematically.
+*in other words, the answer is correct, but may, except for the case that it may be off by exactly 2
+*to the n where n is the word size. If the result was more than 2 to the n,
+*the hardware automatically decreases 2 to the n, which is basically the carry that we just threw because there was an overflow.
+*
+*Most CPUs use a much bigger word size than 8 bits.
+*Many PCs have a 64-bit CPU. A 64-bit CPU can handle numbers larger than 18 quintillion
+*(18,446,744,073,709,551,615).
+*/
 </code></pre>
 
-<pre><code class="language-css">body {
-  font: 100% Helvetica, sans-serif;
-  color: #333;
+<br><br><br>Here is a HalfAdder and a FullAdder in HDL, it returns a sum and a carry.
+<pre><code class="language-js">CHIP HalfAdder {
+    IN a, b;    // 1-bit inputs
+    OUT sum,    // Right bit of a + b
+        carry;  // Left bit of a + b
+
+    PARTS:
+    // Put you code here:
+    And(a=a, b=b, out=carry);
+    Xor(a=a, b=b, out=sum);
 }
 
-.box {
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  -ms-border-radius: 10px;
-  border-radius: 10px;
-}</code></pre>
+//|   a   |   b   |  sum  | carry |
+//|   0   |   0   |   0   |   0   |
+//|   0   |   1   |   1   |   0   |
+//|   1   |   0   |   1   |   0   |
+//|   1   |   1   |   0   |   1   |
+
+CHIP FullAdder {
+    IN a, b, c;  // 1-bit inputs
+    OUT sum,     // Right bit of a + b + c
+        carry;   // Left bit of a + b + c
+
+    PARTS:
+
+    HalfAdder(a=a,    b=b, sum=sum1, carry=carry1);
+    HalfAdder(a=sum1, b=c, sum=sum,  carry=carry2);
+
+    Or(a=carry1, b=carry2, out=carry);
+}
+
+//|   a   |   b   |   c   |  sum  | carry |
+//|   0   |   0   |   0   |   0   |   0   |
+//|   0   |   0   |   1   |   1   |   0   |
+//|   0   |   1   |   0   |   1   |   0   |
+//|   0   |   1   |   1   |   0   |   1   |
+//|   1   |   0   |   0   |   1   |   0   |
+//|   1   |   0   |   1   |   0   |   1   |
+//|   1   |   1   |   0   |   0   |   1   |
+//|   1   |   1   |   1   |   1   |   1   |
+</code></pre><br><br>
+However negative numbers can be a bit tricky.
+<a href='https://en.wikipedia.org/wiki/Two%27s_complement'>2's Complement representation</a>
+<pre><code class="language-js">
+  //-2 + - 3 is in 2's compliment 14 + 13
+
+  -2      14    1110
+  +      +     +
+  -3      13    1101
+  ___    ___   _____
+  -5      11    (1)1011
+
+  11011 = 27  (14+13)
+  without the carrying bit: 1011=11 which is 11s the 2's compliment -5!
+
+  Here is a trick to find the 2's complement:
+   1111
+  -
+   1011  //11
+  +   1
+  ______
+   0101 //5
+
+</code></pre><br><br>
+
+We didn't make any chip for multiplication or division, it will be done in
+software. This is how binary multiplcation works:
+<pre><code class="language-js">
+     1011   //(this is 11 in binary)
+   x 1110   //(this is 14 in binary)
+   ======
+     0000   //(this is 1011 x 0)
+    1011    //(this is 1011 x 1, shifted one position to the left)
+   1011     //(this is 1011 x 1, shifted two positions to the left)
++ 1011      //(this is 1011 x 1, shifted three positions to the left)
+=========
+10011010   //(this is 154 in binary)
+</code></pre><br><br>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ubCCemtuZH8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<br><br><br>
+<h4><i class="fas fa-microchip"></i> Memory</h4><br>
+We don't just want to run one calculation but multiple after each other.
+We break up the physical time into a time unit 1, 2, 3, 4 with a clock, to run our Sequential Logic. <br>
+The physical time between the time unit is enough for the delays of the curcuits to set it to on or off (1,0).
+<br><br>
+<p><b>Combinatorial:</b> out[t] = function(int[t])</p>
+<p><b>Sequential:</b> out[t] = function(in[t-1])</p>
+
+<br>
+<ul>
+<li>Combinational logic uses only the present inputs to determine the
+output while sequential logic uses both present inputs as well as
+previous outputs to determine the current input.</li>
+
+<li>Combinational logic is used to implement basic Boolean
+  operations while sequential logic is used to create memory elements.</li>
+
+<li>Sequential logic uses the feedbacks from the output
+to inputs while combinational logic does not require feedbacks.</li>
+</ul>
+<br>
+<b>Flip Flops</b><br>
+This is flip-flop constructed from cross-coupled NOR gates. In the course it was done with two nand gates<br><br>
+<img src="https://upload.wikimedia.org/wikipedia/commons/c/c6/R-S_mk2.gif" alt="">
+<br><br>The flip-flop kind of "delays" the out value one time unit.
+<b>out[t] = in[t-1]</b><br><br>
+From a flip Flop we can create a 1-Bit register..
+<pre><code class="language-js">if load(t-1) then out(t)=in(t-1)
+else out(t)=out(t-1)
+</code></pre><br><br>
+This can be created with a Multiplexer and a DFF (data flip-flop)
+
+<pre><code class="language-js">CHIP Bit {
+    IN  in, load;
+    OUT out;
+
+    PARTS:
+        Mux(a = loopIn, b = in, sel = load, out = outMux);
+        DFF(in = outMux, out = loopIn, out = out);
+}
+</code></pre><br>
+and from this we can now build a PC (program counter) a Register, a Ram8 and a Ram16 etc..<br>
+(Part of <a href="https://www.nand2tetris.org/project03">Project03</a>)<br><br>
+For the Ram every register have an adress (n-1) if load==1, then
+the in value is loaded into the memory location specified by address.<br>
+<b>The width of the adress</b> for a 8bits register is 3bits. (input = log2n)<br>
+Log of 8 in base 2 is 3. So register number 0 will be represented with a
+code 000. register number 7 will be represented with a code 111.<br>
+And then we have all the possibilities in the middle.
+So the length of the address input, which we call k in this diagram equals
+log of n, the number of registers in this particular RAM device.
+<br><br>
+<h4><i class="fas fa-language"></i> Machine Language</h4><br>
