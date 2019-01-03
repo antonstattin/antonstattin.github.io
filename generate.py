@@ -89,7 +89,8 @@ def update():
     link_list_html = ""
     for post in os.listdir(d_paths['save']):
         post_created = time.ctime(os.path.getmtime(os.path.join(d_paths['read'], post)))
-        link_list_html += '<a href=./html/posts/{post} class="list-group-item list-group-item-action">{post}</a>\n'.format(post=post)
+        link_list_html += '<a href=./html/posts/{post} class="list-group-item list-group-item-action">'.format(post=post)
+        link_list_html += '<i class="fas fa-feather-alt"></i>  <b>{}</b> - {}</a>\n'.format(post.replace('.html', ""), post_created)
 
     with open(d_paths['blog_page_read']) as r_page:
         blog_page_template = r_page.read()
