@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Thu Jan  3 13:47:00 2019</title>
+    <title>Thu Jan  3 19:42:58 2019</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
   </head>
@@ -261,22 +261,158 @@ This can be created with a Multiplexer and a DFF (data flip-flop)
 </code></pre><br>
 and from this we can now build a PC (program counter) a Register, a Ram8 and a Ram16 etc..<br>
 (Part of <a href="https://www.nand2tetris.org/project03">Project03</a>)<br><br>
-For the Ram every register have an adress (n-1) if load==1, then
+For the Ram every register have an adress, if load==1, then
 the in value is loaded into the memory location specified by address.<br>
 <b>The width of the adress</b> for a 8bits register is 3bits. (input = log2n)<br>
 Log of 8 in base 2 is 3. So register number 0 will be represented with a
 code 000. register number 7 will be represented with a code 111.<br>
 And then we have all the possibilities in the middle.
 So the length of the address input, which we call k in this diagram equals
-log of n, the number of registers in this particular RAM device.
+log of n, the number of registers in this particular RAM device.<br><br>
+In a computer there is also other types of memory, like caches, Rom and we also can have a ssd and a hdd.<br>
+While Ram is flushed when the computer is shutdown the Rom keeps it data.
+Most of the "Initilize" stuff is stored in the Rom.
 <br><br>
-<h4><i class="fas fa-language"></i> Machine Language</h4><br>
+
+Accesing a memory location is expensive. We need to supply a long adress and
+getting the memory contents into the CPU takes time. <br>The solution: <b>Memory Heirarchy!</b>
+<br><br>
+<img src="https://upload.wikimedia.org/wikipedia/commons/0/0c/ComputerMemoryHierarchy.svg" alt="" height=50% width=50%>
+<br>
+The farther away from the arithmetic unit we get the bigger grows the memory.<br>
+Smaller memory means smaller memory adress. CPUs usually contain a few, easily accessed "registers".<br>
+Their number and functions are a central part of the machine language.
+<br><br>
+<h4><i class="fas fa-language"></i> Machine & Assembly Language</h4><br>
+An Instruction in binary could be "010001000110010" to add two register togheter,
+a more convinent way would be to say ADD R3 to R2:
+<pre><code class="language-js">//add Register 3 to register 2
+0100010 | 0011 | 0010
+ADD        R3     R2
+</code></pre><br><br>
+<b>Addressing Modes:</b>
+<ul>
+  <li><b>Register:</b><br>Add R1, R2  //R2 <i class="fas fa-arrow-left"></i>R2+R1</li>
+  <li><b>Direct:</b><br>Add R1, M[200]  //Mem[200] <i class="fas fa-arrow-left"></i>Mem[200] + R1</li>
+  <li><b>Indirect:</b><br>Add R1, @A  //Mem[A] <i class="fas fa-arrow-left"></i>Mem[A]+R1</li>
+  <li><b>Immediate:</b><br>Add 73, R1  //R1 <i class="fas fa-arrow-left"></i>R1+73</li>
+</ul>
+<br>
+So this is about where to take the data from and where to put the data.<br><br>
+<b>How is input and output dealt with in Machine Language?</b><br><br>
+There are a lot of input devices, keyboards, screens, printers etc.<br>
+One way to access these input/outputs devices is to connect the registers
+which controls them as part of your memory.<br>
+An example could be that when the user moves or clicks the mouse button, that last movment
+is stored into a register. The register can then be accessed by the computer by a adress.
+This gives us access to the I/O as if it was part of the memory and then the software who deals with this
+(usually the drivers in a OS) must know where to access the adresses and how to speak with it.<br><br>
+<b>Flow Control</b><br>
+Usually the CPU executes machine instructions in sequence.
+However sometimes when for e.g running a loop we need to jump to
+another location and do a unconditionally jump.<br><br>
+
+<b>Instruction Memory -> CPU <-data in/out-> data memory</b><br>
+In the course we built a 16-bit machine. it consists of:
+<br>- Data Memory (Ram): a sequence of 16 bit registers<br>
+- Instruction Memory (Rom): also a seq of 16bit register<br>
+- Central Processing Unit (CPU): performs the 16-bits instructions<br>
+- Instruction bus / data bus / adress buses<br><br>
+
+Two ways of express the same semantics:<br>
+<pre><code class="language-js">//Symbolic
+@17
+D+1;JLE
+
+//Binary
+0000000000010001
+1110011111000110
+</code></pre>
+If you write it the symbolic way you'll need something to translate it to Binary.
+<br><br>
+the machine language in the course Im taking recognizes three registers:<br>
+D holds a 16bit value<br>
+A holds a 16bit value<br>
+M represents the 16-bit ram register addressed by A<br>
+<br>
+<pre><code class="language-js">//Syntax
+@value
+//where value is either a non-negative decimal constant or
+//a symbol referring to such a constant
+//Semantix
+//Sets the A register to 'value'
+//Side Effect: RAM[A] becomes the selected RAM register
+//example
+@21
+// sets the A register to 21
+// RAM[21] becomes the selected RAM register
+
+// set Ram[100] to -1
+@100 // A = 100  (a for adressing)
+M=-1 // RAM[100]=-1
+</code></pre>
+<br>
+<pre><code class="language-js">//The C-instruction
+  dest = comp ; jump //both dest and jump are optional
+</code></pre>
+<br>
+<pre><code class="language-js">//comp =
+  0, 1, -1, D, A, !D, !A, -D, -A, D+1, A+1
+  D-1, A-1, D+A, D-A, D&A, D|A, M, !M, -M, M+1,
+  M-1, D+M, M-D, D&M, M-D, D&M, D|M
+</code></pre>
+<br>
+<pre><code class="language-js">//dest =
+  null, M, D, MD, A, AM, AD, AMD  //M refers to RAM[A]
+</code></pre>
+<br>
+<pre><code class="language-js">//jump =
+  null, JGT, JEQ, JGE, JLT, JNE, JLE, JMP
+</code></pre>
+<br>
+
+<pre><code class="language-js">// Set the 0 register to -1
+D=-1
+
+// set RAM[300] to the value of the D register minus 1
+@300 // A = 300
+M = D-1
+
+// if (D-1==0) jump to execute the instruction stored in RAM[56]
+@56 // A=56 select adress
+D-1;JEQ // if D-1 equal 0 jump to  56
+
+</code></pre><br>
+
+<pre><code class="language-js">
+  //Symbolic syntax @Value
+  @21
+  //Binary syntax 0value
+  (0)000000000010101
+  // the last zero is sometimes called an op-code
+  // "operation code"
+</code></pre><br>
+<pre><code class="language-js">//Symbolic Syntax
+dest = comp; jump
+
+//binary syntax
+1 1 1 a c1 c2 c3 c4 c5 c6 d1 d2 d3 j1 j2 j3
+
+  (1)    |   1 1    | a c1 c2 c3 c4 c5 c6 |  d1 d2 d3  | j1 j2 j3
+//op-code  not used       comp bits          dest bits   jump bits
+</code></pre>
+A nice table can be found <a href="http://www1.idc.ac.il/tecs/lectures/lecture%20about%20chapter%2004.pdf">Here</a>.
+<br><br>
+
+
+This is done with an assembler.<br>
+<i class="fas fa-rocket"></i> <a href="https://github.com/chrislgarry/Apollo-11/blob/master/Comanche055/AGC_BLOCK_TWO_SELF-CHECK.agc">Assambler code form Apollo-II</a>
 
     </div>
 
     <div class="container">
     <br>
-    <i>Thu Jan  3 13:47:00 2019</i>
+    <i>Thu Jan  3 19:42:58 2019</i>
   </div>
 
   </body>
