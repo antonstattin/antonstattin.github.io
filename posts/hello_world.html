@@ -12,10 +12,13 @@ I'll get back to web dev in the future. but for now, this will be ok!
 <h3>Going From Hardware to Software</h3><br>
 I'm taking some courses in C and HDL etc. (<a href='https://www.nand2tetris.org/'>Nand2Tetris</a> & <a href='https://www.coursera.org/specializations/c-programming'>C-programming</a>)
 I usually only code in Python and some C# which is very high level.<br>
-This will hopefully help me understand whats going on under the hood!
+This will hopefully help me understand a bit more what Im actually doing when Im writing and running code. <i class="far fa-grin-beam-sweat"></i><br>
+Why Im writing it here is for me to kind of explain all the <i>(sometimes difficult)</i> concepts to myself <i>(mostly)</i> with my own words.<br>
+<br>
+A computer is built up by a huuge amount of transistors. the most common logic gates are the Nand, And, Or and Not.<br>
+It's really insane that these basic components when combined can built something so advanced and powerful.<br>
+And after layer and layer of abstractions we can have something like Photoshop *pooof*
 <br><br>
-A computer is built up by a huuge amount of transistors / logic gates. the most common are the Nand, And, Or and Not gates.<br>
-It's really insane that these basic components when combined can built something so advanced and powerful.<br><br>
 <img src="https://qph.fs.quoracdn.net/main-qimg-3365ebf23427d9d0a5217c5bc4d7ade3-c" alt=""><br><br>
 Here are some gates that we built in the course with the help of boolean algebra and truth tables:<br>
 And, And16, DMux, DMux4Way, DMux8Way, Mux, Mux4Way16, Mux8Way16,Mux16, Not, Xor..
@@ -100,7 +103,7 @@ Adding with Binary is also quite simple.
     _______________
 (1) 0 1 1 1 0 0 0 1
 
-/*
+/* Pasted from the course:
 *here we have a carry that needs to go to the left of the words size.
 *So from a mathematical point of view, what it means is that the addition that we're actually doing in our
 *hardware is not real integer addition, because we cannot go beyond the numbers that fit inside the word size.
@@ -156,7 +159,7 @@ CHIP FullAdder {
 //|   1   |   1   |   0   |   0   |   1   |
 //|   1   |   1   |   1   |   1   |   1   |
 </code></pre><br><br>
-However negative numbers can be a bit tricky.
+However I found negative numbers much trickier..
 <a href='https://en.wikipedia.org/wiki/Two%27s_complement'>2's Complement representation</a>
 <pre><code class="language-js">
   //-2 + - 3 is in 2's compliment 14 + 13
@@ -181,7 +184,7 @@ However negative numbers can be a bit tricky.
 </code></pre><br><br>
 
 We didn't make any chip for multiplication or division, it will be done in
-software. This is how binary multiplcation works:
+software. This is how binary multiplication works:
 <pre><code class="language-js">
      1011   //(this is 11 in binary)
    x 1110   //(this is 14 in binary)
@@ -193,13 +196,14 @@ software. This is how binary multiplcation works:
 =========
 10011010   //(this is 154 in binary)
 </code></pre><br><br>
+.. and here is a yt-video explaining division<br>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/ubCCemtuZH8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 <br><br><br>
 <h4><i class="fas fa-microchip"></i> Memory</h4><br>
-We don't just want to run one calculation but multiple after each other.
-We break up the physical time into a time unit 1, 2, 3, 4 with a clock, to run our Sequential Logic. <br>
-The physical time between the time unit is enough for the delays of the curcuits to set it to on or off (1,0).
+We don't just want to run one calculation but multiple calculations after each other.
+Todo this we break up the physical time into intervals, time units, with a clock. <br>
+The physical time between the time units is enough to read the voltage properly.
 <br><br>
 <p><b>Combinatorial:</b> out[t] = function(int[t])</p>
 <p><b>Sequential:</b> out[t] = function(in[t-1])</p>
@@ -209,16 +213,16 @@ The physical time between the time unit is enough for the delays of the curcuits
 <li>Combinational logic uses only the present inputs to determine the
 output while sequential logic uses both present inputs as well as
 previous outputs to determine the current input.</li>
-
+<br>
 <li>Combinational logic is used to implement basic Boolean
   operations while sequential logic is used to create memory elements.</li>
-
+<br>
 <li>Sequential logic uses the feedbacks from the output
 to inputs while combinational logic does not require feedbacks.</li>
 </ul>
 <br>
 <b>Flip Flops</b><br>
-This is flip-flop constructed from cross-coupled NOR gates. In the course it was done with two nand gates<br><br>
+This is a flip-flop constructed from cross-coupled NOR gates. (thx wikipedia)<br><br>
 <img src="https://upload.wikimedia.org/wikipedia/commons/c/c6/R-S_mk2.gif" alt="">
 <br><br>The flip-flop kind of "delays" the out value one time unit.
 <b>out[t] = in[t-1]</b><br><br>
@@ -237,60 +241,90 @@ This can be created with a Multiplexer and a DFF (data flip-flop)
         DFF(in = outMux, out = loopIn, out = out);
 }
 </code></pre><br>
-and from this we can now build a PC (program counter) a Register, a Ram8 and a Ram16 etc..<br>
+and from this we can now build a PC (program counter) a simple register, a Ram8 and a Ram64 etc..<br>
 (Part of <a href="https://www.nand2tetris.org/project03">Project03</a>)<br><br>
-For the Ram every register have an adress, if load==1, then
-the in value is loaded into the memory location specified by address.<br>
-<b>The width of the adress</b> for a 8bits register is 3bits. (input = log2n)<br>
-Log of 8 in base 2 is 3. So register number 0 will be represented with a
-code 000. register number 7 will be represented with a code 111.<br>
-And then we have all the possibilities in the middle.
-So the length of the address input, which we call k in this diagram equals
-log of n, the number of registers in this particular RAM device.<br><br>
-In a computer there is also other types of memory, like caches, Rom and we also can have a ssd and a hdd.<br>
-While Ram is flushed when the computer is shutdown the Rom keeps it data.
-Most of the "Initilize" stuff is stored in the Rom.
-<br><br>
 
-Accesing a memory location is expensive. We need to supply a long adress and
-getting the memory contents into the CPU takes time. <br>The solution: <b>Memory Heirarchy!</b>
+The RAM have multiple registers and each register have a unique adress.<br>
+The width of the adress is determined by the log base 2 of the numer of registers. <br><br>
+<i>Example:<br>  RAM8 holding 8 registers needs a 3-bit adress. log2(8)=3<br>
+ 000 refering to register 0 and 111 refering to register 7, and then all the registers inbetween</i>
+<br><br>
+This means bigger memory longer adresses. Accessing memory location is expensive and getting the memory
+contents into the CPU takes time. The solution to this is a <b>Memory Heirarchy!</b>
 <br><br>
 <img src="https://upload.wikimedia.org/wikipedia/commons/0/0c/ComputerMemoryHierarchy.svg" alt="" height=50% width=50%>
 <br>
 The farther away from the arithmetic unit we get the bigger grows the memory.<br>
-Smaller memory means smaller memory adress. CPUs usually contain a few, easily accessed "registers".<br>
+CPUs usually contain a few, small registers.<br>
 Their number and functions are a central part of the machine language.
-<br><br>
+<br><br><br>
 <h4><i class="fas fa-language"></i> Machine & Assembly Language</h4><br>
-An Instruction in binary could be "010001000110010" to add two register togheter,
-a more convinent way would be to say ADD R3 to R2:
+The Machine only speaks 0 and 1s and a machine language program
+is just a serie of instructions written with these two numbers.<br>
+An example of an instruction for a 16-bit machine could be <i>"010001000110010"</i>,
+to know what it does we need to know the hardwares instruction set.<br>
+Diffrent parts of the 16-bit 'string' can mean different things, for example the first four bits
+may be a kind of CPU operation and the other bits could tell on which registers to do the
+operations on.
+These 0 and 1 instructions are very hard to read so to make it easier to write these instructions
+we can use 'symbolic mnemonics'. Which can make for example the "010001000110010" binary instruction
+into something more readable like <i>'ADD R3 R2'</i>. This symbolic notation is called the <b>Assambly language.</b>
+We can write the program in Assambly and then convert it to binary, hopefully with a <br>
+text processing program.. that program is called an <b>Assambler</b> <i class="far fa-grin-wink"></i><br><br>
+
+
+
 <pre><code class="language-js">//add Register 3 to register 2
 0100010 | 0011 | 0010
 ADD        R3     R2
 </code></pre><br><br>
-<b>Addressing Modes:</b>
-<ul>
-  <li><b>Register:</b><br>Add R1, R2  //R2 <i class="fas fa-arrow-left"></i>R2+R1</li>
-  <li><b>Direct:</b><br>Add R1, M[200]  //Mem[200] <i class="fas fa-arrow-left"></i>Mem[200] + R1</li>
-  <li><b>Indirect:</b><br>Add R1, @A  //Mem[A] <i class="fas fa-arrow-left"></i>Mem[A]+R1</li>
-  <li><b>Immediate:</b><br>Add 73, R1  //R1 <i class="fas fa-arrow-left"></i>R1+73</li>
-</ul>
-<br>
-So this is about where to take the data from and where to put the data.<br><br>
-<b>How is input and output dealt with in Machine Language?</b><br><br>
-There are a lot of input devices, keyboards, screens, printers etc.<br>
-One way to access these input/outputs devices is to connect the registers
-which controls them as part of your memory.<br>
-An example could be that when the user moves or clicks the mouse button, that last movment
-is stored into a register. The register can then be accessed by the computer by a adress.
-This gives us access to the I/O as if it was part of the memory and then the software who deals with this
-(usually the drivers in a OS) must know where to access the adresses and how to speak with it.<br><br>
-<b>Flow Control</b><br>
-Usually the CPU executes machine instructions in sequence.
-However sometimes when for e.g running a loop we need to jump to
-another location and do a unconditionally jump.<br><br>
 
-<b>Instruction Memory -> CPU <-data in/out-> data memory</b><br>
+There is a lot of different assambly languages, all with different syntax.
+However, all the languages supports a set of similar generic commands.<br>
+
+<br><br>
+C language<br>
+<pre><code class="language-js">// Adds 1+...+100.
+int i = 1;
+int sum = 0;
+While (i <= 100){
+sum += i;
+i++;
+}
+</code></pre><br><br>
+The course Im doings "Hack" machine language
+<pre><code class="language-js">// Adds 1+...+100.
+@i // i refers to some mem. location.
+M=1 // i=1
+@sum // sum refers to some mem. location.
+M=0 // sum=0
+(LOOP)
+@i
+D=M // D=i
+@100
+D=D-A // D=i-100
+@END
+D;JGT // If (i-100)>0 goto END
+@i
+D=M // D=i
+@sum
+M=D+M // sum=sum+i
+@i
+M=M+1 // i=i+1
+@LOOP
+0;JMP // Goto LOOP
+(END)
+@END
+0;JMP // Infinite loop
+</code></pre>
+<a href="https://docs.wixstatic.com/ugd/44046b_7ef1c00a714c46768f08c459a6cab45a.pdf">From the awesome course PDF</a>
+<br><br>
+<b>Flow Control</b><br>
+All the instructions on the CPU are executed in sequence, cascading from top to bottom.<br>
+If we run out of instructions the program counter will just continue, this can lead to some
+random errors. To prevent this we end all instructions with an infinity loop.<br>
+To make loops or a branch (if/else) we can do a jump.
+
 In the course we built a 16-bit machine. it consists of:
 <br>- Data Memory (Ram): a sequence of 16 bit registers<br>
 - Instruction Memory (Rom): also a seq of 16bit register<br>
@@ -306,8 +340,9 @@ D+1;JLE
 0000000000010001
 1110011111000110
 </code></pre>
-If you write it the symbolic way you'll need something to translate it to Binary.
+
 <br><br>
+
 the machine language in the course Im taking recognizes three registers:<br>
 D holds a 16bit value<br>
 A holds a 16bit value<br>
@@ -379,39 +414,39 @@ dest = comp; jump
   (1)    |   1 1    | a c1 c2 c3 c4 c5 c6 |  d1 d2 d3  | j1 j2 j3
 //op-code  not used       comp bits          dest bits   jump bits
 </code></pre>
-A nice table can be found <a href="http://www1.idc.ac.il/tecs/lectures/lecture%20about%20chapter%2004.pdf">Here</a>.
+
 <br><br>
 <h4><i class="far fa-keyboard"></i> I/O </h4>
 
 
 <b>Screen memory map</b><br>
-A designated memory area, dedicated to manage a display unit.
-The Physical display is continously <i>refreshed</i> from the memory map,
-many times per second.<br>
-Output is effected by writing code that manipulates the screen memory map.
-<br>Display Unit(256 by 512, b/w), pixels that we can turn on and off, that is
-driven by a bit. This needs a mapping, which bit correspons to which pixel.
-<br>1. word=Screen[32*row + col/16]
-<br>   word = RAM[16384 + 32*row + col/16]
-<br> 2 set the (col%16)th bit of word 0 or 1
-<br>Commit word to the RAM
-<br><br>
-<i>Example: change the bit in row 4 column 55. which address should you retrieve,
+The screen memory map is a designated memory area dedicated to manage the display unit.
+The display is continously refreshed from the memory map.<br>
+The Display Unit in the course is using a display 256 by 512, b/w.
+To change a pixel we need to do a mapping and we can't just change one bit at a
+time as all the memory is in 16 bit.
+<ul>
+    <li>word=Screen[32*row + col/16]</li>
+    <li>word = RAM[16384 + 32*row + col/16]</li>
+    <li>2 set the (col%16)th bit of word 0 or 1</li>
+</ul>
+
+<i>Here's an example:<br>change the bit in row 4 column 55. which address should you retrieve,
 and which bit should you change?</i><br>
 word = Screen[32*4 + 55/16] (integer)<br>
 word = Screen[128 + 3]<br>
 word = Screen[131]<br>
 7 = 55%16 (col%16)th bit<br>
 <br>
-Answer: Screen[131], 7th bit<br>
+Answer: Screen[131], 7th bit!<br>
 <br>
 <b>Keyboard Memory map</b><br>
 To represent the keyboard we don't need more then 16bit.<br>
-When a key is pressed on the keyboard the key's "scan code" appears
+When a key is pressed on the key's "scan code" appears
 in the <i>keyboard memory map</i><br>
-example: if 'k' is pressed the scan-code of 'k' is 75, which is
+<i>example: if 'k' is pressed the scan-code of 'k' is 75, which is
 going to look like this '0000000001001011' in the keyboard chip.<br>
-If the keyboard is not used they keyboard chip is all zero.
+If the keyboard is not used they keyboard chip is all zero.</i>
 <br><br><br><br>
 Von Neumann architecture<br>
 <img src="https://upload.wikimedia.org/wikipedia/commons/6/68/Computer_system_bus.svg" alt="" height=40% width=40%><br>
@@ -419,9 +454,9 @@ Von Neumann architecture<br>
 The basic operation of a computer is called the ‘fetch-execute’ cycle. <br>
 The computer fetches the instruction from its memory and then executes it.
 This is done repeatedly from when the computer is booted up to when it is shut down.<br><br>
-The program counter
-
 
 <br><br><br>
+Some random cool links I found while studying this etc.<br>
 <i class="fas fa-rocket"></i> <a href="https://github.com/chrislgarry/Apollo-11/blob/master/Comanche055/AGC_BLOCK_TWO_SELF-CHECK.agc">Assambler code form Apollo-II</a><br>
-<i class="far fa-grin-squint-tears"></i> <a href="https://www.bbc.com/bitesize/guides/zws8d2p/revision/1">These BBC pages are really nice, simple!</a>
+<i class="fas fa-paperclip"></i> <a href="https://www.bbc.com/bitesize/guides/zws8d2p/revision/1">These BBC pages are really nice, simple explanations!</a><br>
+<i class="fas fa-bolt"></i> <a href="https://www.youtube.com/watch?v=HyznrdDSSGM&list=PLowKtXNTBypGqImE405J2565dvjafglHU&index=1">8bit computer tutorial (WOW! Need to learn more about electronics!)</a> and <a href="https://eater.net/8bit/clock">heres the blog!</a><br>
