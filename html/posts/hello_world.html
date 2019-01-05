@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Sat Jan  5 00:43:20 2019</title>
+    <title>Sat Jan  5 15:33:02 2019</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
   </head>
@@ -32,8 +32,8 @@ I'll get back to web dev in the future. but for now, this will be ok!
 <i class="far fa-calendar-check"></i><br>
 <br><br>
 <h3>Going From Hardware to Software</h3><br>
-I'm taking some courses in C and HDL etc. (<a href='https://www.nand2tetris.org/'>Nand2Tetris</a> & <a href='https://www.coursera.org/specializations/c-programming'>C-programming</a>)
-I usually only code in Python and some C# which is very high level.<br>
+I'm taking some courses in C and bulding a 'virtual computer' from scratch! (<a href='https://www.nand2tetris.org/'>Nand2Tetris</a> & <a href='https://www.coursera.org/specializations/c-programming'>C-programming</a>)<br>
+I usually only code in Python and some C# which is very high level.
 This will hopefully help me understand a bit more what Im actually doing when Im writing and running code. <i class="far fa-grin-beam-sweat"></i><br>
 Why Im writing it here is for me to kind of explain all the <i>(sometimes difficult)</i> concepts to myself <i>(mostly)</i> with my own words.<br>
 <br>
@@ -286,7 +286,7 @@ is just a serie of instructions written with these two numbers.<br>
 An example of an instruction for a 16-bit machine could be <i>"010001000110010"</i>,
 to know what it does we need to know the hardwares instruction set.<br>
 Diffrent parts of the 16-bit 'string' can mean different things, for example the first four bits
-may be a kind of CPU operation and the other bits could tell on which registers to do the
+may be a kind of CPU operation and the other bits could tell which registers to do the
 operations on.
 These 0 and 1 instructions are very hard to read so to make it easier to write these instructions
 we can use 'symbolic mnemonics'. Which can make for example the "010001000110010" binary instruction
@@ -302,8 +302,75 @@ ADD        R3     R2
 </code></pre><br><br>
 
 There is a lot of different assambly languages, all with different syntax.
-However, all the languages supports a set of similar generic commands.<br>
+However, all the languages supports a set of similar generic commands.<br><br>
+There is two categories of Memory accessing: First, arithmetic and logical.
+Second the load and store commands, designed to move data between registers and memory.
+The load and store commands may use several types of <b>addressing modes</b>.<br><br>
+<b>Direct Addressing:</b><br>
+Here we load memory directly with a specific memory adress
+<pre><code class="language-js">LOAD R1, 18 // R1<---Memory[18]
+</code></pre><br><br>
+<b>Immediate Addressing:</b><br>
+Here we Load a constant instead of an adress into memory
+<pre><code class="language-js">LOADI R1, 18 // R1<---Memory[18]
+</code></pre><br><br>
+<b>Indirect Addressing:</b><br>
+Here we specify a memory location that holds the required adress.
+<pre><code class="language-js">LOAD* R2,R1 // R2<---Memory[R1]
+</code></pre><br>
+The indirect adressing is used to deal with pointers.
+a simple example: if we create an array in a high level language,
+the compiler will allocate some memory and point to the first adress in that memory.
+When we want to access a specific n-index of the array
+we can just add that n to the first adress in the array. <br>
+For example: x = somearray[i] this in C could also be written like x=*(somearray+i).
 
+<pre><code class="language-js">// Translation of x=*(somearray+i):
+ADD R1,somearray,i // R1<---somearray+i
+LOAD* R2,R1 // R2<---Memory[R1]
+STR R2,x // x<---R2
+</code></pre><br><br>
+
+<b><i class="fas fa-gamepad"></i> Flow Control</b><br>
+Most of the time programs run in a linear fashion but sometimes we want to do
+a thing called <b>branching</b>. The branching serves several purposes,
+<b>repitition</b> (loop), <b>conditional execution</b> (if-then) and
+<b>subroutine calling</b> (jump to some other code segment).
+<br>
+<pre><code class="language-js">// A while loop in high level code:
+while (R1>=0) {
+code segment 1
+}
+code segment 2
+
+// in low level code
+// Typical translation:
+beginWhile:
+JNG R1,endWhile // If R1<0 goto endWhile
+// Translation of code segment 1 comes here
+JMP beginWhile // Goto beginWhile
+endWhile:
+// Translation of code segment 2 comes here
+</code></pre><br><br>
+
+<b>The Von Neumann Platform</b><br>
+In the course we built a von Neumann computer called "hack".
+It's a 16 bit machine, with a CPU, two memory modules serving
+as instruction memory and data memory and two memory-mapped I/O Divices.
+(keyboard and screen)<br>
+There is two 16-bit registers called D and A. D is used solely to store values
+while A is used for both values and addresses.<br>
+It's not enough space to pack both the memory address and the operation commands
+into one 16bits instruction, therefore the syntax of the hack lang instructs on
+an implicit memory location labeled "M".
+So what M refers to is always the current value of A register.
+If we want to use do the operation D = Mem[101]-1 we first have to set the current
+register of A to 101 and then say D=M-1.The A register is also used to give direct access to instruction memory.
+Therfore it's the samething with jumping. We first have to set the A register
+and then say which command we want to do. For Example: if we want "goto 20",
+we first have to set A=20, and then we can do the goto command.<br><br>
+The Hack Language have two generic instructions A-instruction (adress)
+and a C-instruction (compute).
 <br><br>
 C language<br>
 <pre><code class="language-js">// Adds 1+...+100.
@@ -313,133 +380,89 @@ While (i <= 100){
 sum += i;
 i++;
 }
-</code></pre><br><br>
-The course Im doings "Hack" machine language
+</code></pre><br>
+The course Im doings "Hack" machine language, with me over explaining every move <br>
+to try to understand it all.
 <pre><code class="language-js">// Adds 1+...+100.
-@i // i refers to some mem. location.
-M=1 // i=1
-@sum // sum refers to some mem. location.
+@i // Set the current register to some mem. i
+M=1 // Sets that 'i' register to store value 1
+@sum // Sets the register to some mem. sum
 M=0 // sum=0
-(LOOP)
-@i
-D=M // D=i
-@100
-D=D-A // D=i-100
-@END
+(LOOP) // start loop
+@i // set register to i
+D=M // store whats in i into D
+@100 // store 100 in the A register
+D=D-A // take whats in the D register (i) - 1 set D register again
+@END // Set the register to the END instruction
 D;JGT // If (i-100)>0 goto END
-@i
-D=M // D=i
-@sum
-M=D+M // sum=sum+i
-@i
+@i // set the current register to i
+D=M // set D to the current register "i"
+@sum // set the current register to sum
+M=D+M // sum=i+sum
+@i // set current to i
 M=M+1 // i=i+1
-@LOOP
+@LOOP // set register to instruction LOOP
 0;JMP // Goto LOOP
-(END)
-@END
+(END) // end loop
+@END  // set current register to END to create infinte loop
 0;JMP // Infinite loop
 </code></pre>
 <a href="https://docs.wixstatic.com/ugd/44046b_7ef1c00a714c46768f08c459a6cab45a.pdf">From the awesome course PDF</a>
 <br><br>
-<b>Flow Control</b><br>
-All the instructions on the CPU are executed in sequence, cascading from top to bottom.<br>
-If we run out of instructions the program counter will just continue, this can lead to some
-random errors. To prevent this we end all instructions with an infinity loop.<br>
-To make loops or a branch (if/else) we can do a jump.
+The C-instruction gets most of the things done on the hack platform.
+The instruction includes: A. what to compute, B. where to store it afterwards
+and C. what todo next!<br>
+<pre><code class="language-js">//dest=comp;jump
+A    B             C               D          J
+1 | 1 1 | a c1 c2 c3 c4 c5 c6 | d1 d2 d3 | j1 j2 j3
 
-In the course we built a 16-bit machine. it consists of:
-<br>- Data Memory (Ram): a sequence of 16 bit registers<br>
-- Instruction Memory (Rom): also a seq of 16bit register<br>
-- Central Processing Unit (CPU): performs the 16-bits instructions<br>
-- Instruction bus / data bus / adress buses<br><br>
+A = op-code
+B = rests
+C = comp
+D = dest
+J = jump
 
-Two ways of express the same semantics:<br>
-<pre><code class="language-js">//Symbolic
-@17
-D+1;JLE
+//increment the value of Memory[7] by 1
+0000 0000 0000 0111 // @7 (A-Instruction)
+1111 1101 1101 1000 // MD=M+1 (C-Instruction)
 
-//Binary
-0000000000010001
-1110011111000110
-</code></pre>
-
-<br><br>
-
-the machine language in the course Im taking recognizes three registers:<br>
-D holds a 16bit value<br>
-A holds a 16bit value<br>
-M represents the 16-bit ram register addressed by A<br>
-<br>
-<pre><code class="language-js">//Syntax
-@value
-//where value is either a non-negative decimal constant or
-//a symbol referring to such a constant
-//Semantix
-//Sets the A register to 'value'
-//Side Effect: RAM[A] becomes the selected RAM register
-//example
-@21
-// sets the A register to 21
-// RAM[21] becomes the selected RAM register
-
-// set Ram[100] to -1
-@100 // A = 100  (a for adressing)
-M=-1 // RAM[100]=-1
-</code></pre>
-<br>
-<pre><code class="language-js">//The C-instruction
-  dest = comp ; jump //both dest and jump are optional
-</code></pre>
-<br>
-<pre><code class="language-js">//comp =
-  0, 1, -1, D, A, !D, !A, -D, -A, D+1, A+1
-  D-1, A-1, D+A, D-A, D&A, D|A, M, !M, -M, M+1,
-  M-1, D+M, M-D, D&M, M-D, D&M, D|M
-</code></pre>
-<br>
-<pre><code class="language-js">//dest =
-  null, M, D, MD, A, AM, AD, AMD  //M refers to RAM[A]
-</code></pre>
-<br>
-<pre><code class="language-js">//jump =
-  null, JGT, JEQ, JGE, JLT, JNE, JLE, JMP
-</code></pre>
-<br>
-
-<pre><code class="language-js">// Set the 0 register to -1
-D=-1
-
-// set RAM[300] to the value of the D register minus 1
-@300 // A = 300
-M = D-1
-
-// if (D-1==0) jump to execute the instruction stored in RAM[56]
-@56 // A=56 select adress
-D-1;JEQ // if D-1 equal 0 jump to  56
-
+/*
+*when a = 1
+*and c1->c6= 1 1 0 1 1 1
+*the comp mnemonics are M+1
+* and d->d3= 0 1 1
+* the destination mnemonics are MD (Memory[A] and D register)
+*/
 </code></pre><br>
+The jump field of the C-instruction
+<pre><code class="language-js">0 0 0 | null | No jump
+0 0 1 | JGT  | If out > 0 jump
+0 1 0 | JEQ  | If out ¼ 0 jump
+0 1 1 | JGE  | If out b 0 jump
+1 0 0 | JLT  | If out < 0 jump
+1 0 1 | JNE  | If out 0 0 jump
+1 1 0 | JLE  | If out a 0 jump
+1 1 1 | JMP  | Jump
+</code></pre><br><br>
 
-<pre><code class="language-js">
-  //Symbolic syntax @Value
-  @21
-  //Binary syntax 0value
-  (0)000000000010101
-  // the last zero is sometimes called an op-code
-  // "operation code"
-</code></pre><br>
-<pre><code class="language-js">//Symbolic Syntax
-dest = comp; jump
+<b><i class="fas fa-flag"></i> Predefined Symbols in the assambly program</b><br>
+A special subset of RAM adresses can be reffered by:<br><br>
+<ul>
+  <li><b>Virtual Registers:</b>
+    <i> <b>R0</b> to <b>R15</b> referes to RAM adresses 0 to 15..</i></li><br>
+  <li><b>Predefined Pointers:</b>
+    <i> <b>SP</b>, <b>LCL</b>, <b>ARG</b>, <b>THIS</b> and <b>THAT</b> refer to RAM adresses 0 to 4</i></li><br>
+  <li><b>I/O pointers:</b> <i><b>SCREEN</b> and <b>KBD</b> refer to RAM
+  addresses 16384 (0x4000) and 24576 (0x6000)</i></li><br>
+  <li><b>Label Symbols:</b> <i>are declared by the pseudo-command ‘‘(somename)’’ A label can be
+      defined only once and can be used anywhere in the assembly program, even before the line in which it is defined.</i></li><br>
+  <li><b>Variable symbols:</b> <i>Any user defined symbol will be treated as an
+  variable starting at RAM adress 16 (0x0010)</i></li>
+</ul><br><br>
 
-//binary syntax
-1 1 1 a c1 c2 c3 c4 c5 c6 d1 d2 d3 j1 j2 j3
-
-  (1)    |   1 1    | a c1 c2 c3 c4 c5 c6 |  d1 d2 d3  | j1 j2 j3
-//op-code  not used       comp bits          dest bits   jump bits
-</code></pre>
 
 <br><br>
 <h4><i class="far fa-keyboard"></i> I/O </h4>
-
 
 <b>Screen memory map</b><br>
 The screen memory map is a designated memory area dedicated to manage the display unit.
@@ -462,6 +485,13 @@ word = Screen[131]<br>
 <br>
 Answer: Screen[131], 7th bit!<br>
 <br>
+<pre><code class="language-js">// Draw a single black dot at the screen's top left corner:
+@SCREEN // Set the A register to point to the memory
+// word that is mapped to the 16 left-most
+// pixels of the top row of the screen.
+M=1 // Blacken the left-most pixel.
+</code></pre><br><br>
+
 <b>Keyboard Memory map</b><br>
 To represent the keyboard we don't need more then 16bit.<br>
 When a key is pressed on the key's "scan code" appears
@@ -487,7 +517,7 @@ Some random cool links I found while studying this etc.<br>
 
     <div class="container">
     <br>
-    <i>Sat Jan  5 00:43:20 2019</i>
+    <i>Sat Jan  5 15:33:02 2019</i>
   </div>
 
   </body>
