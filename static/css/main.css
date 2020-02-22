@@ -16,7 +16,7 @@ a:hover{
 
 canvas{
 	background: black;
-  width: 100px;
+  width: 150px;
   animation:
     skull-fade-in 2s 1.5s forwards,
     rotatehue 4s infinite;
@@ -88,19 +88,19 @@ canvas{
 
 @keyframes start-game {
   0%{
-    width: 100px;
+    width: 150px;
   }
   100%{
-    width: 150px;
+    width: 200px;
   }
 }
 
 @keyframes end-game {
   0%{
-    width: 150px;
+    width: 200px;
   }
   100%{
-    width: 100px;
+    width: 150px;
   }
 }
 
@@ -210,7 +210,7 @@ canvas{
 
 .logo{
 	margin-top: -5px;
-  font-size: 16px;
+  font-size: 1.5rem;
 	font-family: 'Press Start 2P', cursive;
 	color: white;
   text-shadow: -1px 1px 0px #00FFFF, 1px -1px 0px #FF0000;
@@ -239,7 +239,7 @@ canvas{
 
 
 .logo-lower{
-  font-size: 20px;
+  font-size: 28px;
   font-family: 'VT323', monospace;
   overflow: hidden; /* Ensures the content is not revealed until the animation */
   border-right: .15em solid #05ff54; /* The typwriter cursor */
@@ -249,7 +249,7 @@ canvas{
     typing 2.0s 1s steps(30, end) forwards,
     blink-caret .75s step-end infinite;
   width: 0;
-  margin-left: calc(50% - 90px);
+  margin-left: calc(50% - 125px);
   margin-top: -10px;
 
 }
@@ -267,7 +267,7 @@ canvas{
 /* The typing effect */
 @keyframes typing {
   from { width: 0 }
-  to { width: 179px }
+  to { width: 251px }
 }
 
 /* The typewriter cursor effect */
