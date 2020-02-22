@@ -2,8 +2,8 @@
 ####   ###  #######   ##### ###  ##  ##    ##  #     #
 #   #   #	#  #  #  ##      #  #     #    #   #     #
 ####    # 	   #      ####   ###      #    #   #     #
-#   #   #      #        ##   # ##  	  ##  ##   #     #   
-####   ###    ###   #####   ##   ###   ####    ##### ##### 
+#   #   #      #        ##   # ##  	  ##  ##   #     #
+####   ###    ###   #####   ##   ###   ####    ##### #####
 
 
 Bitskull logo script. creates a bitskull logo with html canvas
@@ -14,25 +14,25 @@ Bitskull logo script. creates a bitskull logo with html canvas
 
 //the logo matrix, needs to be 9x11!
 logoTrix = [0,0,0,0,0,0,0,0,0,0,0,
-			0,0,0,1,1,1,1,1,0,0,0,
-			0,0,1,1,1,1,1,1,1,0,0,
-			0,0,1,1,1,1,1,1,1,0,0,
-			0,1,1,0,1,1,1,0,1,1,0,
-			0,1,1,1,1,1,1,1,1,1,0,
-			0,0,1,1,1,1,1,1,1,0,0,
-			0,0,0,1,0,1,0,1,0,0,0,
-			0,0,0,0,0,0,0,0,0,0,0];
+						0,0,0,1,1,1,1,1,0,0,0,
+						0,0,1,1,1,1,1,1,1,0,0,
+						0,0,1,1,1,1,1,1,1,0,0,
+						0,1,1,0,1,1,1,0,1,1,0,
+						0,1,1,1,1,1,1,1,1,1,0,
+						0,0,1,1,1,1,1,1,1,0,0,
+						0,0,0,1,0,1,0,1,0,0,0,
+						0,0,0,0,0,0,0,0,0,0,0];
 
 // loop and paint logo
 total = 0
 for (hei = 0; hei < 9; hei++) {
-    
+
     for (wid=0;  wid<11; wid++)
     {
-	
+
     	if(logoTrix[total]===1){
 		    $('canvas').drawRect({
-			  fillStyle: 'rgb('+(154+(hei*10))+', '+ (56+(hei*10))+', '+(0+(hei*10))+')',
+			  fillStyle: 'rgb('+(0+(hei*10))+', '+ (200+(hei*10))+', '+(200+(hei*10))+')',
 			  x: 20*wid+10, y: 20*hei+10,
 			  width: 20,
 			  height: 20,
@@ -45,7 +45,7 @@ for (hei = 0; hei < 9; hei++) {
 			//},600+(total*5));
 
 		}
-			   
+
 	  total++;
 
       }
@@ -93,10 +93,12 @@ requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame
 var keysDown = {};
 
 addEventListener("keydown", function (e) {
+	e.preventDefault();
 	keysDown[e.keyCode] = true;
 }, false);
 
 addEventListener("keyup", function (e) {
+	e.preventDefault();
 	delete keysDown[e.keyCode];
 }, false);
 
@@ -183,38 +185,56 @@ function spawnPoint(){
 
 }
 
+function msToTime(duration) {
+  var milliseconds = parseInt((duration % 1000) / 100),
+  seconds = Math.floor((duration / 1000) % 60),
+  minutes = Math.floor((duration / (1000 * 60)) % 60)
+
+  minutes = (minutes < 10) ? "0" + minutes : minutes;
+  seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+  return minutes + ":" + seconds + "." + milliseconds;
+}
+
 function win(){
 	total = 0
+	gamestate = false;
+	gameover = true;
+	$('canvas').removeLayer('scoretable').drawLayers();
+
+	var scoretime = msToTime(Date.now() - timecount);
+
 	for (hei = 0; hei < 9; hei++) {
-	    
+
 	    for (wid=0;  wid<11; wid++)
 	    {
-		
+
 	    	if(logoTrix[total]===1){
-			    $('canvas').drawRect({
-				  fillStyle: 'rgb('+(165-(hei*10))+', '+ (183-(hei*10))+', '+(70-(hei*10))+')',
+					$('canvas').drawRect({
+				  fillStyle: 'rgb('+(0+(hei*10))+', '+ (200+(hei*10))+', '+(200+(hei*10))+')',
 				  x: 20*wid+10, y: 20*hei+10,
 				  width: 20,
 				  height: 20,
 				  layer: true,
 				  groups: ['block']
+
 				});
 
-			    //$('canvas').animateLayerGroup('block',{
-			  	//	fillStyle: 'rgb('+(165-(hei*10))+', '+ (183-(hei*10))+', '+(214-(hei*10))+')'
-				//},600+(total*5));
-
 			}
-				   
+
 		  total++;
 
 	      }
-
 	}
 
-	writeText("100 points! You must be really bored! If you hit 1000 points then I'll show you a secret!", 0);
+	$('canvas').removeClass('game-started-canvas');
+	$('canvas').addClass('game-over-canvas');
 
-
+	$('#score-text').text('Good job!');
+	$('#score-text').addClass('win-text');
+	$('#time-score').text('Finished in ' + scoretime);
+	$('#time-score-container').addClass('time-score-show');
+	$('#game-info').html('Checkout more games at <a>bitskull.com</a>');
 
 }
 
@@ -256,12 +276,7 @@ function checkCollision(wantX, wantY){
 	else{
 		player.velocityY = 0;
 		player.grounded = true;
-
-
 	}
-
-
-
 }
 
 function checkPickPoint(){
@@ -273,37 +288,13 @@ function checkPickPoint(){
 	}
 
 	if(hit){
-
 		player.points++;
-
-		if(player.points == 20){
+		if(player.points == 6){
 			win();
+			return
 		}
-
-		if(player.points == 200){
-			writeText("200 points! woohoo, 800 to go!",0);
-		}
-
-		if(player.points == 500){
-			writeText("half way there..",0);
-		}
-		if(player.points == 900){
-			writeText("the last 100! coman!",0);
-		}
-
-		if(player.points == 980){
-			writeText("so close..",0);
-		}
-		if(player.points == 1000){
-			writeText("the secret: coming soon.. (lol, not yet implemented)",0);
-		}
-
-
-
 		gameObject.score = true;
 		spawnPoint();
-
-		
 	}
 }
 
@@ -336,7 +327,7 @@ var update = function(modifier){
 	}
 	if (39 in keysDown){ // right
 		wantX += player.speed * modifier;
-		
+
 	}
 
 	if(player.velocityX != 0){
@@ -363,7 +354,7 @@ var update = function(modifier){
 	// check if player is at point
 
 	checkPickPoint();
-	
+
 
 }
 
@@ -386,8 +377,6 @@ function renderPlayer(){
 			  layer: true,
 			  name: 'player'
 			});
-
-	
 }
 
 
@@ -406,10 +395,10 @@ function renderScore(){
 		  text: 'Score!'
 		});
 
-	$('canvas').animateLayer('score', 
+	$('canvas').animateLayer('score',
 		{
 		fontSize: 20},
-		1000, 
+		1000,
 		function(){
 			$('canvas').removeLayer('score').drawLayers();
 		});
@@ -434,16 +423,16 @@ function renderScore(){
 // render
 var render = function(){
 
-	renderPlayer();
+	if (gamestate){
+		renderPlayer();
 
-	if(gameObject.score){
-		renderScore();	
+		if(gameObject.score){
+			renderScore();
+		}
 	}
-
-
-
-	
-
+	else{
+		return
+	}
 }
 
 function startGame(){
@@ -451,10 +440,10 @@ function startGame(){
 	// loop and paint logo
 	total = 0
 	for (hei = 0; hei < 9; hei++) {
-	    
+
 	    for (wid=0;  wid<11; wid++)
 	    {
-		
+
 	    	if(logoTrix[total]===1){
 			    $('canvas').drawRect({
 				  fillStyle: 'rgb('+(165-(hei*10))+', '+ (183-(hei*10))+', '+(214-(hei*10))+')',
@@ -465,12 +454,8 @@ function startGame(){
 				  groups: ['block']
 				});
 
-			    //$('canvas').animateLayerGroup('block',{
-			  	//	fillStyle: 'rgb('+(165-(hei*10))+', '+ (183-(hei*10))+', '+(214-(hei*10))+')'
-				//},600+(total*5));
-
 			}
-				   
+
 		  total++;
 
 	      }
@@ -543,31 +528,37 @@ function startGame(){
 // The main game loop
 var main = function () {
 
-	if ((13 in keysDown)&&!gamestate){
-		
-		gamestate=true
-		startGame();
+	if (!gameover){
+		if ((13 in keysDown)&&!gamestate){
 
-		then = Date.now();
+			$('canvas').addClass('game-started-canvas');
+			timecount = Date.now();
+			gamestate=true
+			startGame();
+
+			then = Date.now();
+		}
+
+		if(gamestate){
+
+			var now = Date.now();
+			var delta = now - then;
+
+			update(delta / 1000);
+			render();
+
+			then = now;
+
+		}
+
+		// Request to do this again ASAP
+		requestAnimationFrame(main);
 	}
-
-	if(gamestate){
-
-		var now = Date.now();
-		var delta = now - then;
-
-		update(delta / 1000);
-		render();
-
-		then = now;
-
-	}
-
-	// Request to do this again ASAP
-	requestAnimationFrame(main);
 };
 
+var gameover = false;
 var gamestate = false;
 var then = 0;
+var timecount = 0;
 
 main();
