@@ -14,14 +14,27 @@ a:hover{
   cursor: pointer;
 }
 
+#selfie-canvas{
+  width: 260px;
+  height: 260px;
+}
+
+#fill-me-up{
+  display: block;
+  background-color: black;
+  height: 80px;
+  width: 60px;
+  overflow-y: hidden;
+  font-size: 4px;
+  font-family: 'Press Start 2P', cursive;
+  line-height: 6px;
+  color: #34eb58;
+}
+
 #canvas-game{
 	background: black;
   width: 100px;
-  animation:
-    skull-fade-in 2s 1.5s forwards,
-    rotatehue 4s infinite;
-  opacity: 0;
-  filter: blur(1px);
+
 }
 
 #game-info{
@@ -35,6 +48,12 @@ a:hover{
   color: #fca01e;
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: #e07b16;
+}
+
+.about-image{
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
 }
 
 .time-score-show{
@@ -67,6 +86,13 @@ a:hover{
   }
 }
 
+.game-intro{
+  animation:
+    skull-fade-in 2s 1.5s forwards,
+    rotatehue 4s infinite;
+  opacity: 0;
+  filter: blur(1px);
+}
 
 .game-over-canvas{
   background: black;
@@ -220,8 +246,6 @@ a:hover{
   0% {
     text-shadow: -5px 5px 1px #00FFFF, 5px -5px 1px #FF0000;
   }
-
-
   100%{
     text-shadow: -1px 1px 0px #00FFFF, 1px -1px 0px #FF0000;
   }
