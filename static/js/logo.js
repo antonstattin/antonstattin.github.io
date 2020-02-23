@@ -14,14 +14,14 @@ Bitskull logo script. creates a bitskull logo with html canvas
 
 //the logo matrix, needs to be 9x11!
 logoTrix = [0,0,0,0,0,0,0,0,0,0,0,
-						0,0,0,1,1,1,1,1,0,0,0,
-						0,0,1,1,1,1,1,1,1,0,0,
-						0,0,1,1,1,1,1,1,1,0,0,
-						0,1,1,0,1,1,1,0,1,1,0,
-						0,1,1,1,1,1,1,1,1,1,0,
-						0,0,1,1,1,1,1,1,1,0,0,
-						0,0,0,1,0,1,0,1,0,0,0,
-						0,0,0,0,0,0,0,0,0,0,0];
+				0,0,0,1,1,1,1,1,0,0,0,
+				0,0,1,1,1,1,1,1,1,0,0,
+				0,0,1,1,1,1,1,1,1,0,0,
+				0,1,1,0,1,1,1,0,1,1,0,
+				0,1,1,1,1,1,1,1,1,1,0,
+				0,0,1,1,1,1,1,1,1,0,0,
+				0,0,0,1,0,1,0,1,0,0,0,
+				0,0,0,0,0,0,0,0,0,0,0];
 
 // loop and paint logo
 total = 0
@@ -31,7 +31,7 @@ for (hei = 0; hei < 9; hei++) {
     {
 
     	if(logoTrix[total]===1){
-		    $('canvas').drawRect({
+		    $('#canvas-game').drawRect({
 			  fillStyle: 'rgb('+(0+(hei*10))+', '+ (200+(hei*10))+', '+(200+(hei*10))+')',
 			  x: 20*wid+10, y: 20*hei+10,
 			  width: 20,
@@ -40,7 +40,7 @@ for (hei = 0; hei < 9; hei++) {
 			  groups: ['block']
 			});
 
-		    //$('canvas').animateLayerGroup('block',{
+		    //$('#canvas-game').animateLayerGroup('block',{
 		  	//	fillStyle: 'rgb('+(165-(hei*10))+', '+ (183-(hei*10))+', '+(214-(hei*10))+')'
 			//},600+(total*5));
 
@@ -160,10 +160,10 @@ function spawnPoint(){
 	};
 
 
-	$('canvas').removeLayer('point').drawLayers();
-	$('canvas').removeLayer('spec').drawLayers();
+	$('#canvas-game').removeLayer('point').drawLayers();
+	$('#canvas-game').removeLayer('spec').drawLayers();
 
-	$('canvas').drawRect({
+	$('#canvas-game').drawRect({
 			  fillStyle: 'rgb(255, 219, 110)',
 			  x: point.x, y: point.y,
 			  width: point.size,
@@ -172,7 +172,7 @@ function spawnPoint(){
 			  name: 'point'
 			});
 
-	$('canvas').drawRect({
+	$('#canvas-game').drawRect({
 			  fillStyle: 'rgb(255, 255, 255)',
 			  x: point.x+1, y: point.y-1,
 			  width: 2,
@@ -200,7 +200,7 @@ function win(){
 	total = 0
 	gamestate = false;
 	gameover = true;
-	$('canvas').removeLayer('scoretable').drawLayers();
+	$('#canvas-game').removeLayer('scoretable').drawLayers();
 
 	var scoretime = msToTime(Date.now() - timecount);
 
@@ -210,7 +210,7 @@ function win(){
 	    {
 
 	    	if(logoTrix[total]===1){
-					$('canvas').drawRect({
+					$('#canvas-game').drawRect({
 				  fillStyle: 'rgb('+(0+(hei*10))+', '+ (200+(hei*10))+', '+(200+(hei*10))+')',
 				  x: 20*wid+10, y: 20*hei+10,
 				  width: 20,
@@ -227,8 +227,8 @@ function win(){
 	      }
 	}
 
-	$('canvas').removeClass('game-started-canvas');
-	$('canvas').addClass('game-over-canvas');
+	$('#canvas-game').removeClass('game-started-canvas');
+	$('#canvas-game').addClass('game-over-canvas');
 
 	$('#score-text').text('Good job!');
 	$('#score-text').addClass('win-text');
@@ -366,10 +366,10 @@ function roundUp(num) {
 
 
 function renderPlayer(){
-	$('canvas').removeLayer('player').drawLayers();
-	$('canvas').removeLayer('text').drawLayers();
+	$('#canvas-game').removeLayer('player').drawLayers();
+	$('#canvas-game').removeLayer('text').drawLayers();
 
-	$('canvas').drawRect({
+	$('#canvas-game').drawRect({
 			  fillStyle: 'rgb(220, 40, 40)',
 			  x: player.x, y: player.y,
 			  width: player.size,
@@ -384,7 +384,7 @@ function renderScore(){
 
 
 	gameObject.score= false;
-	$('canvas').drawText({
+	$('#canvas-game').drawText({
 		  fillStyle: 'rgb(255,200,36)',
 		  strokeWidth: 2,
 		  x: 110, y: 70,
@@ -395,16 +395,16 @@ function renderScore(){
 		  text: 'Score!'
 		});
 
-	$('canvas').animateLayer('score',
+	$('#canvas-game').animateLayer('score',
 		{
 		fontSize: 20},
 		1000,
 		function(){
-			$('canvas').removeLayer('score').drawLayers();
+			$('#canvas-game').removeLayer('score').drawLayers();
 		});
 
-	$('canvas').removeLayer('scoretable').drawLayers();
-	$('canvas').drawText({
+	$('#canvas-game').removeLayer('scoretable').drawLayers();
+	$('#canvas-game').drawText({
 		  fillStyle: 'rgb(255,200,36)',
 		  strokeWidth: 2,
 		  x: 110, y: 10,
@@ -445,7 +445,7 @@ function startGame(){
 	    {
 
 	    	if(logoTrix[total]===1){
-			    $('canvas').drawRect({
+			    $('#canvas-game').drawRect({
 				  fillStyle: 'rgb('+(165-(hei*10))+', '+ (183-(hei*10))+', '+(214-(hei*10))+')',
 				  x: 20*wid+10, y: 20*hei+10,
 				  width: 20,
@@ -463,7 +463,7 @@ function startGame(){
 	}
 
 
-	$('canvas').drawRect({
+	$('#canvas-game').drawRect({
 			  fillStyle: 'rgb(50, 200, 20)',
 			  x: 191, y:119,
 			  width: 20,
@@ -472,7 +472,7 @@ function startGame(){
 			  groups: ['foreground']
 			});
 
-	$('canvas').drawRect({
+	$('#canvas-game').drawRect({
 			  fillStyle: 'rgb(50, 200, 20)',
 			  x: 31, y:119,
 			  width: 20,
@@ -481,7 +481,7 @@ function startGame(){
 			  groups: ['foreground']
 			});
 
-	$('canvas').drawRect({
+	$('#canvas-game').drawRect({
 			  fillStyle: 'rgb(50, 200, 20)',
 			  x: 51, y:139,
 			  width: 20,
@@ -490,7 +490,7 @@ function startGame(){
 			  groups: ['foreground']
 			});
 
-	$('canvas').drawRect({
+	$('#canvas-game').drawRect({
 			  fillStyle: 'rgb(50, 200, 20)',
 			  x: 171, y:139,
 			  width: 20,
@@ -499,7 +499,7 @@ function startGame(){
 			  groups: ['foreground']
 			});
 
-	$('canvas').drawRect({
+	$('#canvas-game').drawRect({
 			  fillStyle: 'rgb(50, 200, 20)',
 			  x: 130, y:139,
 			  width: 20,
@@ -508,7 +508,7 @@ function startGame(){
 			  groups: ['foreground']
 			});
 
-	$('canvas').drawRect({
+	$('#canvas-game').drawRect({
 			  fillStyle: 'rgb(50, 200, 20)',
 			  x: 90, y:139,
 			  width: 20,
@@ -531,7 +531,7 @@ var main = function () {
 	if (!gameover){
 		if ((13 in keysDown)&&!gamestate){
 
-			$('canvas').addClass('game-started-canvas');
+			$('#canvas-game').addClass('game-started-canvas');
 			timecount = Date.now();
 			gamestate=true
 			startGame();
